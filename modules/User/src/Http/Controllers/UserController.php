@@ -13,9 +13,10 @@ class UserController extends Controller
     }
 
     public function index(){
-        $user = $this->userRepo->getUser();
-        dd($user);
-        return view('User::list' , compact('user'));
+        // $user = $this->userRepo->getUser();
+        // dd($user);
+        $pageTitle = "Quản lý người dùng";
+        return view('User::list' , compact('pageTitle'));
     }
 
     public function detail($id){
