@@ -2,7 +2,12 @@
 
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('admin.users.add')}}">Thêm</a>
-<table id="datatablesSimple">
+
+@session('msg')
+    <div class="alert alert-success">{{session('msg')}}</div>
+@endsession
+
+<table id="myTable" class="table table-bordered">
     <thead>
         <tr>
             <th>Tên</th>
@@ -23,7 +28,7 @@
             <th>Xóa</th>
         </tr>
     </tfoot>
-    <tbody>
+    {{-- <tbody>
         <tr>
             <td>Tiger Nixon</td>
             <td>System Architect</td>
@@ -48,6 +53,26 @@
                 <a href="#" class="btn btn-danger">Xóa</a>
             </td>
         </tr>
-    </tbody>
+    </tbody> --}}
 </table>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready( function () {
+    $('#myTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{route('admin.users.data')}}",
+        columns: [
+            {data: "name"},
+            {data: "email"},
+            {data: "group_id"},
+            {data: "created_at"},
+            {data: "edit"},
+            {data: "delete"},
+        ]
+    });
+} );
+</script>
 @endsection

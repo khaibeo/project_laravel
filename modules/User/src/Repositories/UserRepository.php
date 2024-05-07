@@ -2,8 +2,8 @@
 namespace Modules\User\src\Repositories;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Hash;
-use Modules\User\src\Models\User;
 use Modules\User\src\Repositories\UserRepositoryInterface;
+use Modules\User\src\Models\User;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -15,6 +15,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUsers($limit)
     {
         return $this->model->paginate($limit);
+    }
+
+    public function getAllUser(){
+        return $this->model->select(['id','name','email','group_id','created_at'])->get();
     }
 
     public function setPassword($password, $id)
@@ -32,5 +36,4 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
         return false;
     }
-    
 }

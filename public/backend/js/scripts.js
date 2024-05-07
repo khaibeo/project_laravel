@@ -6,7 +6,6 @@
     // 
 // Scripts
 // 
-
 window.addEventListener('DOMContentLoaded', event => {
 
     // Toggle the side navigation
@@ -24,3 +23,8 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+
+// $('#myTable').DataTable( {
+//     serverSide: true,
+//     ajax: '/data-source'
+// } );
