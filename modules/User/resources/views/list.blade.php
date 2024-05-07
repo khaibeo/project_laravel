@@ -57,6 +57,7 @@
 </table>
 @endsection
 
+@include('parts.admin.delete')
 @section('script')
 <script>
     $(document).ready( function () {

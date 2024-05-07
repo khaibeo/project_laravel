@@ -44,12 +44,41 @@ class UserController extends Controller
         $users = $this->userRepo->getAllUser();
 
         return DataTables::of($users)
-        ->addColumn('edit', '<a href="#" class="btn btn-warning">Sửa</a>')
-        ->addColumn('delete', '<a href="#" class="btn btn-danger">Xóa</a>')
+        ->addColumn('edit', function($user){
+            return '<a href="'. route('admin.users.edit',$user) .'" class="btn btn-warning">Sửa</a>';
+        })
+        ->addColumn('delete', function($user){
+            return "<a href='". route('admin.users.delete',$user) . "' class='btn btn-danger delete-action'>Xóa</a>";
+        })
         ->editColumn('created_at', function($user){
             return Carbon::parse($user->created_at)->format('d/m/Y H:i:s');
         })
         ->rawColumns(['edit', 'delete'])
         ->toJson();
+    }
+
+    public function delete($id){
+        $this->userRepo->delete($id);
+
+        return back()->with('msg','Xóa thành công');
+    }
+
+    public function edit($id){
+        $pageTitle = "Sửa thông tin người dùng";
+        $user = $this->userRepo->find($id);
+
+        return view('User::edit' , compact('pageTitle','user'));
+    }
+
+    public function update(UserRequest $request,$id){
+        $data = $request->except('password','_token');
+
+        if($request->password){
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $this->userRepo->update($id,$data);
+
+        return redirect()->route('admin.users.index')->with('msg','Sửa thông tin thành công');
     }
 }

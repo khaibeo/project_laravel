@@ -21,7 +21,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
@@ -29,8 +29,21 @@ class UserRequest extends FormRequest
                 if($value == 0 ){
                     $fail('Hãy chọn nhóm người dùng');
                 }
-            }],
+            }]
         ];
+
+        $id = $this->route()->user;
+        if($id){
+            $rules['email'] = 'required|email|unique:users,email,' . $id;
+
+            if($this->password){
+                $rules['password'] = 'min:8';
+            }else{
+                unset($rules['password']); 
+            }
+        }
+        
+        return $rules;
     }
 
     public function messages()

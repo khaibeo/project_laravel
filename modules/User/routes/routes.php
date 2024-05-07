@@ -3,14 +3,18 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => '\Modules\User\src\Http\Controllers'], function () {
-    Route::prefix('/admin')->group(function () {
-        Route::prefix('/users')->middleware('web')->group(function () {
-            Route::get('/', 'UserController@index')->name('admin.users.index');
+    Route::prefix('/admin')->name('admin.')->group(function () {
+        Route::prefix('/users')->name('users.')->middleware('web')->group(function () {
+            Route::get('/', 'UserController@index')->name('index');
             Route::get('/detail/{id}', 'UserController@detail');
-            Route::get('/add', 'UserController@add')->name('admin.users.add');
-            Route::post('/add', 'UserController@store')->name('admin.users.store');
+            Route::get('/add', 'UserController@add')->name('add');
+            Route::post('/add', 'UserController@store')->name('store');
 
-            Route::get('data','UserController@data')->name('admin.users.data');
+            Route::get('/edit/{user}', 'UserController@edit')->name('edit');
+            Route::post('/edit/{user}', 'UserController@update')->name('update');
+
+            Route::get('data','UserController@data')->name('data');
+            Route::delete('delete/{id}','UserController@delete')->name('delete');
         });
     });
 });
