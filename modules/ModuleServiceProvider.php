@@ -5,6 +5,7 @@ use Modules\User\src\Repositories\UserRepository;
 use Closure;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Modules\Dashboard\src\Repositories\DashboardRepository;
 use Modules\User\src\Commands\Test;
 use Modules\User\src\Http\Middlewares\DemoMiddleware;
 
@@ -51,7 +52,7 @@ class ModuleServiceProvider extends ServiceProvider
        $this->commands($this->commands);
 
        $this->app->singleton(
-        UserRepository::class
+        UserRepository::class,
         );
     }
 

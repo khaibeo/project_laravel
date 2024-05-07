@@ -13,13 +13,16 @@ class UserController extends Controller
     }
 
     public function index(){
-        // $user = $this->userRepo->getUser();
-        // dd($user);
         $pageTitle = "Quản lý người dùng";
         return view('User::list' , compact('pageTitle'));
     }
 
     public function detail($id){
         return "Chi tiet san pham $id";
+    }
+
+    public function add(){
+        $pageTitle = "Thêm người dùng";
+        return view('User::add' , compact('pageTitle'));
     }
 }
