@@ -12,7 +12,6 @@
         <tr>
             <th>Tên</th>
             <th>Link</th>
-            <th>Cha</th>
             <th>Thời gian</th>
             <th>Sửa</th>
             <th>Xóa</th>
@@ -22,7 +21,6 @@
         <tr>
             <th>Tên</th>
             <th>Link</th>
-            <th>Cha</th>
             <th>Thời gian</th>
             <th>Sửa</th>
             <th>Xóa</th>
@@ -42,7 +40,6 @@
         columns: [
             {data: "name"},
             {data: "link"},
-            {data: "parent_id"},
             {data: "created_at"},
             {data: "edit"},
             {data: "delete"},

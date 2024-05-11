@@ -12,6 +12,10 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     }
     
     public function getCategories(){
-        return $this->model->select(['id','name','slug','parent_id','created_at'])->orderBy('created_at', 'desc');
+        return $this->model->with('subCategories')->select(['id','name','slug','parent_id','created_at'])->whereParentId(0)->orderBy('created_at', 'desc')->get();
+    }
+
+    public function getAllCategories(){
+        return $this->model->select(['id','name','slug','parent_id','created_at'])->orderBy('created_at', 'desc')->get();
     }
 }

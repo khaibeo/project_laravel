@@ -16,7 +16,7 @@
                     <label for="" class="form-label">Cha</label>
                     <select name="parent_id" class="form-select @error('parent_id') is-invalid @enderror">
                         <option value="0">Không</option>
-                        <option value="1">Nhóm 1</option>
+                        {{getListCategory($categories, old('parent_id'))}}
                     </select>
                     @error('parent_id')
                         <div class="invalid-feedback">{{$message}}</div>
