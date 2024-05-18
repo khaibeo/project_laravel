@@ -7,8 +7,8 @@ Route::group(['namespace' => '\Modules\User\src\Http\Controllers'], function () 
         Route::prefix('/users')->name('users.')->middleware('web')->group(function () {
             Route::get('/', 'UserController@index')->name('index');
             Route::get('/detail/{id}', 'UserController@detail');
-            Route::get('/add', 'UserController@add')->name('add');
-            Route::post('/add', 'UserController@store')->name('store');
+            Route::get('/create', 'UserController@add')->name('create');
+            Route::post('/create', 'UserController@store')->name('store');
 
             Route::get('/edit/{user}', 'UserController@edit')->name('edit');
             Route::post('/edit/{user}', 'UserController@update')->name('update');

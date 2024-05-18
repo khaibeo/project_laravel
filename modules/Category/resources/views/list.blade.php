@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<a class="btn btn-primary mb-3" href="{{route('admin.categories.add')}}">Thêm</a>
+<a class="btn btn-primary mb-3" href="{{route('admin.categories.create')}}">Thêm</a>
 
 @session('msg')
     <div class="alert alert-success">{{session('msg')}}</div>
