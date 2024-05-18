@@ -4,6 +4,7 @@ namespace Modules\Teacher\src\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Modules\Teacher\src\Http\Requests\TeacherRequest;
 use Modules\Teacher\src\Repositories\TeacherRepository;
 use Modules\Teacher\src\Repositories\TeacherRepositoryInterface;
@@ -89,10 +90,12 @@ class TeacherController extends Controller
         $teacher = $this->teacherRepository->find($id);
 
         $status = $this->teacherRepository->delete($id);
+        
         if ($status) {
             $image = $teacher->image;
-            // deleteFileStorage($image);
+            File::delete(public_path($image));
         }
+
         return back()->with('msg', 'Xóa thành công');
     }
 }
