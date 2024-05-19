@@ -103,6 +103,17 @@ window.addEventListener('DOMContentLoaded', event => {
             isChangeSlug = true;
         });
     }
+
+    const logoutAction = document.querySelector('.logout-action');
+    const logoutForm = document.querySelector('.logout-form');
+
+    if(logoutAction){
+        logoutAction.addEventListener('click',function(e){
+            e.preventDefault();
+            logoutForm.action = e.target.href;
+            logoutForm.submit();
+        })
+    }
 });
 
 // $('#myTable').DataTable( {

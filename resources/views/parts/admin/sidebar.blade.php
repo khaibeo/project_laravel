@@ -15,9 +15,9 @@
 
             </div>
         </div>
-        {{-- <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            Start Bootstrap
-        </div> --}}
+        <div class="sb-sidenav-footer">
+            <div class="small">Đăng nhập với:</div>
+           {{Auth()->user()->name}}
+        </div>
     </nav>
 </div>
