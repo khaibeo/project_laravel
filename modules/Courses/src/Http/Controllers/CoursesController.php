@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\File;
 use Modules\Courses\src\Models\Course;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Courses\src\Http\Requests\CoursesRequest;
-use Modules\Courses\src\Repositories\CoursesRepository;
-use Modules\Category\src\Repositories\CategoryRepository;
-use Modules\Teacher\src\Repositories\TeacherRepository;
+use Modules\Category\src\Repositories\CategoryRepositoryInterface;
+use Modules\Courses\src\Repositories\CoursesRepositoryInterface;
+use Modules\Teacher\src\Repositories\TeacherRepositoryInterface;
 
 class CoursesController extends Controller
 {
@@ -18,8 +18,8 @@ class CoursesController extends Controller
     protected $categoriesRepository;
     protected $teacherRepo;
 
-    public function __construct(CoursesRepository $coursesRepository, CategoryRepository $categoriesRepository,
-    TeacherRepository $teacherRepository)
+    public function __construct(CoursesRepositoryInterface $coursesRepository, CategoryRepositoryInterface $categoriesRepository,
+    TeacherRepositoryInterface $teacherRepository)
     {
         $this->coursesRepository = $coursesRepository;
         $this->categoriesRepository = $categoriesRepository;

@@ -1,13 +1,22 @@
 <?php
+
 namespace Modules;
 
 use Modules\User\src\Repositories\UserRepository;
 use Closure;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use Modules\Category\src\Repositories\CategoryRepository;
+use Modules\Category\src\Repositories\CategoryRepositoryInterface;
+use Modules\Courses\src\Repositories\CoursesRepository;
+use Modules\Courses\src\Repositories\CoursesRepositoryInterface;
 use Modules\Dashboard\src\Repositories\DashboardRepository;
+use Modules\Teacher\src\Repositories\TeacherRepository;
+use Modules\Teacher\src\Repositories\TeacherRepositoryInterface;
 use Modules\User\src\Commands\Test;
 use Modules\User\src\Http\Middlewares\DemoMiddleware;
+use Modules\User\src\Repositories\UserRepositoryInterface;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -21,13 +30,13 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function boot()
     {
-       $dir = $this->getModule();
+        $dir = $this->getModule();
 
-       if(!empty($dir)){
+        if (!empty($dir)) {
             foreach ($dir as $directory) {
                 $this->registerModule($directory);
             }
-       }
+        }
     }
 
     public function register()
@@ -35,75 +44,115 @@ class ModuleServiceProvider extends ServiceProvider
         //config
         $dir = $this->getModule();
 
-       if(!empty($dir)){
+        if (!empty($dir)) {
             foreach ($dir as $directory) {
                 $this->registerConfig($directory);
             }
-       }
+        }
 
-       //midddleware
-       $middlewares = $this->middlewares;
+        //midddleware
+        $middlewares = $this->middlewares;
 
-       if(!empty($middlewares)){
-        $this->registerMiddleware($middlewares);
-       }
+        if (!empty($middlewares)) {
+            $this->registerMiddleware($middlewares);
+        }
 
-       //command
-       $this->commands($this->commands);
+        //command
+        $this->commands($this->commands);
 
-       $this->app->singleton(
-        UserRepository::class,
+        $this->getRepository();
+    }
+
+    private function registerMiddleware($middlewares)
+    {
+        foreach ($middlewares as $key => $value) {
+            $this->app['router']->pushMiddlewareToGroup($key, $value);
+        }
+    }
+
+    private function getRepository()
+    {
+        $this->app->singleton(
+            UserRepositoryInterface::class,
+            UserRepository::class
+        );
+
+        $this->app->singleton(
+            TeacherRepositoryInterface::class,
+            TeacherRepository::class
+        );
+
+        $this->app->singleton(
+            TeacherRepositoryInterface::class,
+            TeacherRepository::class
+        );
+
+        $this->app->singleton(
+            CoursesRepositoryInterface::class,
+            CoursesRepository::class
+        );
+
+        $this->app->singleton(
+            CategoryRepositoryInterface::class,
+            CategoryRepository::class
         );
     }
 
-    private function registerMiddleware($middlewares){
-        foreach ($middlewares as $key => $value) {
-            $this->app['router']->pushMiddlewareToGroup($key,$value);
-           }
-    }
-
-    private function getModule(){
-        $dir = array_map('basename',File::directories(__DIR__));
+    private function getModule()
+    {
+        $dir = array_map('basename', File::directories(__DIR__));
 
         return $dir;
     }
 
-    private function registerConfig($directory){
-        $configPath = __DIR__ . "/". $directory . "/config";
+    private function registerConfig($directory)
+    {
+        $configPath = __DIR__ . "/" . $directory . "/config";
 
-        if(File::exists($configPath)){
-            $configFiles = array_map('basename',File::allFiles($configPath));
+        if (File::exists($configPath)) {
+            $configFiles = array_map('basename', File::allFiles($configPath));
             foreach ($configFiles as $config) {
                 $alias = basename($config, '.php');
-                $this->mergeConfigFrom($configPath . "/$config",$alias);
+                $this->mergeConfigFrom($configPath . "/$config", $alias);
             }
-        }    
+        }
     }
 
-    private function registerModule($moduleName){
+    private function registerModule($moduleName)
+    {
         $modulePath = __DIR__ . "/$moduleName";
 
-        //Khai báo route
-        if(File::exists($modulePath . "/routes/routes.php")){
-            $this->loadRoutesFrom($modulePath . "/routes/routes.php");
-        }
-        
+        //Khai báo route web
+        Route::group(['namespace' => "Modules\\{$moduleName}\src\Http\Controllers", 'middleware' => 'web'], function () use ($modulePath) {
+            if (File::exists($modulePath . "/routes/web.php")) {
+                $this->loadRoutesFrom($modulePath . "/routes/web.php");
+            }
+        });
+
+        //Khai báo route web Api
+        Route::group(['namespace' => "Modules\\{$moduleName}\src\Http\Controllers", 'middleware' => 'api','prefix' => 'api'], function () use ($modulePath) {
+            if (File::exists($modulePath . "/routes/api.php")) {
+                $this->loadRoutesFrom($modulePath . "/routes/api.php");
+            }
+        });
+
         //khai báo migration
-        if(File::exists($modulePath . "/migrations")){
+        if (File::exists($modulePath . "/migrations")) {
             $this->loadMigrationsFrom($modulePath . "/migrations");
         }
+
         //khai báo languages
-        if(File::exists($modulePath . "/resources/lang")){
-            $this->loadTranslationsFrom($modulePath . "/resources/lang",$moduleName);
+        if (File::exists($modulePath . "/resources/lang")) {
+            $this->loadTranslationsFrom($modulePath . "/resources/lang", $moduleName);
             $this->loadJsonTranslationsFrom($modulePath . "/resources/lang");
         }
 
         //khai báo view
-        if(File::exists($modulePath . "/resources/views")){
-            $this->loadViewsFrom($modulePath . "/resources/views",$moduleName);
+        if (File::exists($modulePath . "/resources/views")) {
+            $this->loadViewsFrom($modulePath . "/resources/views", $moduleName);
         }
         //khai báo helpers
-        if(File::exists($modulePath . "/helpers")){
+        if (File::exists($modulePath . "/helpers")) {
             $allFile = File::allFiles($modulePath . "/helpers");
 
             foreach ($allFile as $value) {

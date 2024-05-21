@@ -59,8 +59,15 @@ class Module extends Command
         //routes
         $routePath = base_path('modules/' . $name . "/routes");
         File::makeDirectory($routePath,0755, true, true);
-        $routeFile = base_path('modules/' . $name . "/routes/routes.php");
-        File::put($routeFile, "<?php \nuse Illuminate\Support\Facades\Route;");
+        $routeWebFile = base_path('modules/' . $name . "/routes/web.php");
+        $routeApiFile = base_path('modules/' . $name . "/routes/api.php");
+
+        $routeContent = file_get_contents(app_path('Console/Commands/Templates/route.txt'));
+        $routeContent = str_replace('{name}',strtolower($name),$routeContent);
+
+        File::put($routeWebFile, $routeContent);
+        File::put($routeApiFile, $routeContent);
+
 
         //src
         $srcPath = base_path('modules/' . $name . "/src");

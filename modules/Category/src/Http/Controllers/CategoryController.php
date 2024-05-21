@@ -3,13 +3,13 @@ namespace Modules\Category\src\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 use Modules\Category\src\Http\Requests\CategoryRequest;
-use Modules\Category\src\Repositories\CategoryRepository;
+use Modules\Category\src\Repositories\CategoryRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 class CategoryController extends Controller
 {
     protected $categoryRepo;
 
-    public function __construct(CategoryRepository $categoryRepo)
+    public function __construct(CategoryRepositoryInterface $categoryRepo)
     {
         $this->categoryRepo = $categoryRepo;
     }
