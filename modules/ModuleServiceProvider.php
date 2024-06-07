@@ -7,16 +7,23 @@ use Closure;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use League\CommonMark\Parser\Block\DocumentBlockParser;
 use Modules\Category\src\Repositories\CategoryRepository;
 use Modules\Category\src\Repositories\CategoryRepositoryInterface;
 use Modules\Courses\src\Repositories\CoursesRepository;
 use Modules\Courses\src\Repositories\CoursesRepositoryInterface;
 use Modules\Dashboard\src\Repositories\DashboardRepository;
+use Modules\Document\src\Repositories\DocumentRepository;
+use Modules\Document\src\Repositories\DocumentRepositoryInterface;
+use Modules\Lessons\src\Repositories\LessonsRepository;
+use Modules\Lessons\src\Repositories\LessonsRepositoryInterface;
 use Modules\Teacher\src\Repositories\TeacherRepository;
 use Modules\Teacher\src\Repositories\TeacherRepositoryInterface;
 use Modules\User\src\Commands\Test;
 use Modules\User\src\Http\Middlewares\DemoMiddleware;
 use Modules\User\src\Repositories\UserRepositoryInterface;
+use Modules\Video\src\Repositories\VideoRepository;
+use Modules\Video\src\Repositories\VideoRepositoryInterface;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -96,6 +103,21 @@ class ModuleServiceProvider extends ServiceProvider
             CategoryRepositoryInterface::class,
             CategoryRepository::class
         );
+
+        $this->app->singleton(
+            LessonsRepositoryInterface::class,
+            LessonsRepository::class
+        );
+
+        $this->app->singleton(
+            VideoRepositoryInterface::class,
+            VideoRepository::class
+        );
+
+        $this->app->singleton(
+            DocumentRepositoryInterface::class,
+            DocumentRepository::class
+        );
     }
 
     private function getModule()
@@ -130,7 +152,7 @@ class ModuleServiceProvider extends ServiceProvider
         });
 
         //Khai báo route web Api
-        Route::group(['namespace' => "Modules\\{$moduleName}\src\Http\Controllers", 'middleware' => 'api','prefix' => 'api'], function () use ($modulePath) {
+        Route::group(['namespace' => "Modules\\{$moduleName}\src\Http\Controllers", 'middleware' => 'api', 'prefix' => 'api'], function () use ($modulePath) {
             if (File::exists($modulePath . "/routes/api.php")) {
                 $this->loadRoutesFrom($modulePath . "/routes/api.php");
             }

@@ -18,9 +18,11 @@ class CoursesController extends Controller
     protected $categoriesRepository;
     protected $teacherRepo;
 
-    public function __construct(CoursesRepositoryInterface $coursesRepository, CategoryRepositoryInterface $categoriesRepository,
-    TeacherRepositoryInterface $teacherRepository)
-    {
+    public function __construct(
+        CoursesRepositoryInterface $coursesRepository,
+        CategoryRepositoryInterface $categoriesRepository,
+        TeacherRepositoryInterface $teacherRepository
+    ) {
         $this->coursesRepository = $coursesRepository;
         $this->categoriesRepository = $categoriesRepository;
         $this->teacherRepo = $teacherRepository;
@@ -37,33 +39,36 @@ class CoursesController extends Controller
         $courses = $this->coursesRepository->getAllCourses();
 
         $data =  DataTables::of($courses)
-        ->addColumn('edit', function ($course) {
-            return '<a href="'.route('admin.courses.edit', $course).'" class="btn btn-warning">Sửa</a>';
-        })
-        ->addColumn('delete', function ($course) {
-            return '<a href="'.route('admin.courses.delete', $course).'" class="btn btn-danger delete-action">Xóa</a>';
-        })
-        ->editColumn('created_at', function ($course) {
-            return Carbon::parse($course->created_at)->format('d/m/Y H:i:s');
-        })
-        ->editColumn('status', function ($course) {
-            return $course->status == 1 ? '<button class="btn btn-success">Ra mắt</button>' : '<button class="btn btn-warning">Chưa ra mắt</button>';
-        })
-        ->editColumn('price', function ($course) {
-            if ($course->price) {
-                if ($course->sale_price) {
-                    $price = number_format($course->sale_price).'đ';
+            ->addColumn('edit', function ($course) {
+                return '<a href="' . route('admin.courses.edit', $course) . '" class="btn btn-warning">Sửa</a>';
+            })
+            ->addColumn('lessons', function ($course) {
+                return '<a href="' . route('admin.lessons.index', $course) . '" class="btn btn-primary">Bài giảng</a>';
+            })
+            ->addColumn('delete', function ($course) {
+                return '<a href="' . route('admin.courses.delete', $course) . '" class="btn btn-danger delete-action">Xóa</a>';
+            })
+            ->editColumn('created_at', function ($course) {
+                return Carbon::parse($course->created_at)->format('d/m/Y H:i:s');
+            })
+            ->editColumn('status', function ($course) {
+                return $course->status == 1 ? '<button class="btn btn-success">Ra mắt</button>' : '<button class="btn btn-warning">Chưa ra mắt</button>';
+            })
+            ->editColumn('price', function ($course) {
+                if ($course->price) {
+                    if ($course->sale_price) {
+                        $price = number_format($course->sale_price) . 'đ';
+                    } else {
+                        $price = number_format($course->price) . 'đ';
+                    }
                 } else {
-                    $price = number_format($course->price).'đ';
+                    $price = 'Miễn phí';
                 }
-            } else {
-                $price = 'Miễn phí';
-            }
 
-            return $price;
-        })
-        ->rawColumns(['edit', 'delete', 'status'])
-        ->toJson();
+                return $price;
+            })
+            ->rawColumns(['edit', 'delete', 'status', 'lessons'])
+            ->toJson();
         return $data;
     }
 
@@ -76,7 +81,7 @@ class CoursesController extends Controller
         $teachers = $this->teacherRepo->getAllTeacher()->get();
 
 
-        return view('Courses::add', compact('pageTitle', 'categories','teachers'));
+        return view('Courses::add', compact('pageTitle', 'categories', 'teachers'));
     }
 
     public function store(CoursesRequest $request)
@@ -117,7 +122,7 @@ class CoursesController extends Controller
 
         $pageTitle = 'Cập nhật khóa học';
 
-        return view('Courses::edit', compact('course', 'pageTitle', 'categories', 'categoryIds','teachers'));
+        return view('Courses::edit', compact('course', 'pageTitle', 'categories', 'categoryIds', 'teachers'));
     }
 
     public function update(CoursesRequest $request, $id)
@@ -149,7 +154,7 @@ class CoursesController extends Controller
         $course = $this->coursesRepository->find($id);
         // $this->coursesRepository->deleteCourseCategories($course);
         $status = $this->coursesRepository->delete($id);
-        if($status){
+        if ($status) {
             $image = public_path($course->thumbnail);
 
             File::delete($image);
