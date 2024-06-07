@@ -16,6 +16,8 @@
                 ])
                 @include('parts.admin.menu_item', ['title' => 'Giảng viên', 'name' => 'teacher'])
                 @include('parts.admin.menu_item', ['title' => 'Người dùng', 'name' => 'users'])
+                @include('parts.admin.menu_item', ['title' => 'Học viên', 'name' => 'students'])
+
 
             </div>
         </div>
