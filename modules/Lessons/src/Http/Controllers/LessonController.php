@@ -12,6 +12,7 @@ use Modules\Video\src\Repositories\VideoRepositoryInterface;
 use Modules\Courses\src\Repositories\CoursesRepositoryInterface;
 use Modules\Lessons\src\Repositories\LessonsRepositoryInterface;
 use Modules\Document\src\Repositories\DocumentRepositoryInterface;
+use Modules\Lessons\src\Models\Lesson;
 
 class LessonController extends Controller
 {
@@ -127,6 +128,8 @@ class LessonController extends Controller
             'durations' => $videoInfo['playtime_seconds'] ?? 0,
             'description' => $description,
         ]);
+
+        $this->updateDurations($courseId);
         return redirect()->route('admin.lessons.index', $courseId)->with('msg', 'Thêm bài giảng thành công');
     }
 
@@ -186,6 +189,11 @@ class LessonController extends Controller
             'durations' => $videoInfo['playtime_seconds'] ?? 0,
             'description' => $description,
         ]);
+
+        $lesson = $this->lessonRepository->find($lessonId);
+        $courseId = $lesson->course_id;
+        $this->updateDurations($courseId);
+
         return redirect()->route('admin.lessons.edit', $lessonId)->with('msg', 'Sửa bài giảng thành công');
     }
 
@@ -194,7 +202,11 @@ class LessonController extends Controller
         $lesson = $this->lessonRepository->find($lessonId);
 
         $this->lessonRepository->delete($lessonId);
-        return redirect()->route('admin.lessons.index', $lesson->course_id)->with('msg', 'Xóa thành công');
+
+        $courseId = $lesson->course_id;
+        $this->updateDurations($courseId);
+
+        return redirect()->route('admin.lessons.index', $courseId)->with('msg', 'Xóa thành công');
     }
 
     public function sort(Request $request, $courseId)
@@ -214,5 +226,18 @@ class LessonController extends Controller
             }
             return redirect()->route('admin.lessons.sort', $courseId)->with('msg', 'Sắp xếp bài giảng thành công');
         }
+    }
+
+    private function updateDurations($courseId)
+    {
+        $lessons = $this->lessonRepository->getAllLessions($courseId);
+
+        $durations = $lessons->reduce(function ($prev, $item) {
+            return $prev + $item->durations;
+        }, 0);
+
+        $this->coursesRepository->update($courseId, [
+            'durations' => $durations,
+        ]);
     }
 }

@@ -28,4 +28,12 @@ class LessonsRepository extends BaseRepository implements LessonsRepositoryInter
     {
         return $this->getAll();
     }
+
+    public function getLessonCount($course)
+    {
+        return (object) [
+            'module' => $course->lessons()->whereNull('parent_id')->count(),
+            'lessons' => $course->lessons()->whereNotNull('parent_id')->count(),
+        ];
+    }
 }

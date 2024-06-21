@@ -13,6 +13,15 @@ class CoursesRepository extends BaseRepository implements CoursesRepositoryInter
         return Course::class;
     }
 
+    public function getCourses($limit)
+    {
+        return $this->model->limit($limit)->latest()->paginate($limit);
+    }
+    public function getCourseActive($slug)
+    {
+        return $this->model->whereSlug($slug)->first();
+    }
+
     public function getAllCourses()
     {
         return $this->model->select(['id', 'name', 'price', 'status', 'sale_price', 'created_at'])->latest();

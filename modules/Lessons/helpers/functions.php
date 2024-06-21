@@ -25,3 +25,9 @@ function getTime($seconds) {
     $seconds = $seconds < 10 ? '0'.$seconds:$seconds;
     return "$mins:$seconds";
 }
+
+function getLessonCount($course)
+{
+    $lessonRepository = new Modules\Lessons\src\Repositories\LessonsRepository();
+    return $lessonRepository->getLessonCount($course);
+}
