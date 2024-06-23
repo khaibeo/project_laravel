@@ -16,7 +16,7 @@ class CoursesController extends Controller
     {
         $pageTitle = 'Khóa học';
         $pageName = 'Khóa học';
-        $courses = $this->coursesRepository->getCourses(config('paginate.limit'));
+        $courses = $this->coursesRepository->getCoursesClient(config('paginate.limit'));
 
         return view('Courses::clients.index', compact('pageTitle', 'pageName', 'courses'));
     }

@@ -17,6 +17,12 @@ class CoursesRepository extends BaseRepository implements CoursesRepositoryInter
     {
         return $this->model->limit($limit)->latest()->paginate($limit);
     }
+
+    public function getCoursesClient($limit)
+    {
+        return $this->model->limit($limit)->where('status',1)->latest()->paginate($limit);
+    }
+
     public function getCourseActive($slug)
     {
         return $this->model->whereSlug($slug)->first();

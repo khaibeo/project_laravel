@@ -31,3 +31,15 @@ function getLessonCount($course)
     $lessonRepository = new Modules\Lessons\src\Repositories\LessonsRepository();
     return $lessonRepository->getLessonCount($course);
 }
+
+function getModuleByPosition($course)
+{
+    $lessonRepository = new Modules\Lessons\src\Repositories\LessonsRepository();
+    return $lessonRepository->getModuleByPosition($course);
+}
+
+function getLessonsByPosition($course, $moduleId)
+{
+    $lessonRepository = new Modules\Lessons\src\Repositories\LessonsRepository();
+    return $lessonRepository->getLessonsByPosition($course, $moduleId);
+}

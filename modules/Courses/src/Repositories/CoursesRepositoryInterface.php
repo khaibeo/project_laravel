@@ -9,6 +9,9 @@ interface CoursesRepositoryInterface extends RepositoryInterface
     public function getAllCourses();
 
     public function getCourses($limit);
+    
+    public function getCoursesClient($limit);
+
 
     public function getCourseActive($slug);
 }
