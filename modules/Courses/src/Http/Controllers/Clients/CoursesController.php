@@ -3,14 +3,21 @@ namespace Modules\Courses\src\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use Modules\Courses\src\Repositories\CoursesRepositoryInterface;
+use Modules\Lessons\src\Repositories\LessonsRepositoryInterface;
+use Iman\Streamer\VideoStreamer;
+use Illuminate\Http\Request;
 
 class CoursesController extends Controller
 {
     protected $coursesRepository;
+    protected $lessonsRepository;
+
     public function __construct(
         CoursesRepositoryInterface $coursesRepository,
+        LessonsRepositoryInterface $lessonsRepository
     ) {
         $this->coursesRepository = $coursesRepository;
+        $this->lessonsRepository = $lessonsRepository;
     }
     public function index()
     {
@@ -31,5 +38,22 @@ class CoursesController extends Controller
         $pageName = $course->name;
         $index = 0;
         return view('Courses::clients.detail', compact('pageTitle', 'pageName', 'course', 'index'));
+    }
+
+    public function getTrialVideo($lessonId = 0){
+        $lesson = $this->lessonsRepository->find($lessonId);
+
+        if(!$lesson){
+            return ['success' => false];
+        }
+
+        return ['success' => true, 'data' => $lesson];
+    }
+
+    public function streamVideo(Request $request)
+    {
+        $videoPath = $request->video;
+        $path = public_path($videoPath);
+        VideoStreamer::streamFile($path);
     }
 }

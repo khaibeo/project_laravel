@@ -178,3 +178,8 @@
 	text-transform: uppercase;
 	margin-bottom: 20px;
 }
+
+.video-js {
+    width: 100%;
+    height: 450px;
+}

@@ -9,4 +9,6 @@ interface LessonsRepositoryInterface extends RepositoryInterface
     public function getLessons($courseId);
 
     public function getAllLessions();
+
+    public function getPosition($courseId);
 }
