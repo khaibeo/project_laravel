@@ -11,4 +11,8 @@ interface LessonsRepositoryInterface extends RepositoryInterface
     public function getAllLessions();
 
     public function getPosition($courseId);
+
+    public function getLessonActive($slug);
+
+    public function getLessonsByPosition($course, $moduleId = null, $isDocument = null);
 }

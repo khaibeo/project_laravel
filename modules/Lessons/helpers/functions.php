@@ -38,8 +38,8 @@ function getModuleByPosition($course)
     return $lessonRepository->getModuleByPosition($course);
 }
 
-function getLessonsByPosition($course, $moduleId)
+function getLessonsByPosition($course, $moduleId = null, $isDocument = null)
 {
     $lessonRepository = new Modules\Lessons\src\Repositories\LessonsRepository();
-    return $lessonRepository->getLessonsByPosition($course, $moduleId);
+    return $lessonRepository->getLessonsByPosition($course, $moduleId, $isDocument);
 }

@@ -6,6 +6,8 @@ use App\Repositories\BaseRepository;
 use Modules\Lessons\src\Models\Lesson;
 use Modules\Lessons\src\Repositories\LessonsRepositoryInterface;
 
+use function Illuminate\Events\queueable;
+
 class LessonsRepository extends BaseRepository implements LessonsRepositoryInterface
 {
     public function getModel()
@@ -22,6 +24,11 @@ class LessonsRepository extends BaseRepository implements LessonsRepositoryInter
     public function getLessons($courseId)
     {
         return $this->model->with('subLessons')->whereCourseId($courseId)->whereNull('parent_id')->select(['id', 'name', 'slug', 'is_trial', 'parent_id', 'view', 'durations', 'course_id'])->orderBy('position', 'asc');
+    }
+
+    public function getLessonActive($slug)
+    {
+        return $this->model->whereSlug($slug)->firstOrFail();
     }
 
     public function getAllLessions()
@@ -42,8 +49,20 @@ class LessonsRepository extends BaseRepository implements LessonsRepositoryInter
         return $course->lessons()->whereNull('parent_id')->orderBy('position')->get();
     }
 
-    public function getLessonsByPosition($course, $moduleId)
-    {
-        return $course->lessons()->where('parent_id', $moduleId)->orderBy('position')->get();
+    public function getLessonsByPosition($course, $moduleId = null, $isDocument = null)
+    { 
+        $query = $course->lessons();
+
+        if($moduleId){
+            $query = $query->where('parent_id', $moduleId);
+        }else{
+            $query = $query->whereNotNull('parent_id');
+        }
+
+        if($isDocument){
+            $query = $query->whereNotNull('document_id');
+        }
+
+        return $query->orderBy('position')->get();
     }
 }

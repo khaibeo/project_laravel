@@ -6,6 +6,7 @@ use Modules\Video\src\Models\Video;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Document\src\Models\Document;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Courses\src\Models\Course;
 
 class Lesson extends Model
 {
@@ -23,6 +24,7 @@ class Lesson extends Model
         'position',
         'durations',
         'description',
+        'status'
     ];
     protected $with = ['video'];
 
@@ -50,5 +52,10 @@ class Lesson extends Model
             'document_id',
             'id'
         );
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class,'course_id','id');
     }
 }
