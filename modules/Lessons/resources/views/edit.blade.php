@@ -129,6 +129,13 @@
                 </div>
             </div>
 
+            <div class="col-12">
+                <div class="mb-3 d-flex align-items-center gap-2">
+                    <label for="">Kích hoạt</label>
+                    <input type="checkbox" value="1" name="status" {{ old('status',$lesson->status) == 1 ? 'checked' : '' }}>
+                </div>
+            </div>
+
 
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Lưu lại</button>

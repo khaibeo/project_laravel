@@ -98,6 +98,7 @@ class LessonController extends Controller
         $isTrail = $request->is_trial;
         $position = $request->position;
         $description = $request->description;
+        $status = $request->status;
 
         $documentId = null;
         $videoId = null;
@@ -127,6 +128,7 @@ class LessonController extends Controller
             'position' => $position,
             'durations' => $videoInfo['playtime_seconds'] ?? 0,
             'description' => $description,
+            'status' => $status ?? 0,
         ]);
 
         $this->updateDurations($courseId);
@@ -160,6 +162,7 @@ class LessonController extends Controller
         $isTrail = $request->is_trial;
         $position = $request->position;
         $description = $request->description;
+        $status = $request->status ?? 0;
 
         $documentId = null;
         $videoId = null;
@@ -188,6 +191,7 @@ class LessonController extends Controller
             'position' => $position,
             'durations' => $videoInfo['playtime_seconds'] ?? 0,
             'description' => $description,
+            'status' => $status
         ]);
 
         $lesson = $this->lessonRepository->find($lessonId);

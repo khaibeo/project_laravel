@@ -28,7 +28,7 @@ class LessonsRepository extends BaseRepository implements LessonsRepositoryInter
 
     public function getLessonActive($slug)
     {
-        return $this->model->whereSlug($slug)->firstOrFail();
+        return $this->model->whereSlug($slug)->whereStatus(1)->firstOrFail();
     }
 
     public function getAllLessions()
@@ -46,12 +46,12 @@ class LessonsRepository extends BaseRepository implements LessonsRepositoryInter
 
     public function getModuleByPosition($course)
     {
-        return $course->lessons()->whereNull('parent_id')->orderBy('position')->get();
+        return $course->lessons()->whereNull('parent_id')->where('status',1)->orderBy('position')->get();
     }
 
     public function getLessonsByPosition($course, $moduleId = null, $isDocument = null)
     { 
-        $query = $course->lessons();
+        $query = $course->lessons()->where('status',1);
 
         if($moduleId){
             $query = $query->where('parent_id', $moduleId);
