@@ -10,7 +10,7 @@ class VerifyController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if ($user->status) {
+        if ($user->email_verified_at) {
             return redirect()->route('home');
         }
         $pageTitle = 'Kích hoạt tài khoản';

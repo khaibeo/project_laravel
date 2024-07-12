@@ -13,7 +13,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     });
 });
 
-Route::group(['as' => 'lesson.', 'middleware' => ['auth:students','blockStudent']],function () {
+Route::group(['as' => 'lesson.', 'middleware' => ['auth:students','blockStudent','verified']],function () {
     Route::get('bai-hoc/{slug}', 'Clients\LessonController@index')->name('index');
 });
 
