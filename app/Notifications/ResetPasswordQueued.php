@@ -9,5 +9,4 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class ResetPasswordQueued extends ResetPassword implements ShouldQueue
 {
     use Queueable;
-
 }

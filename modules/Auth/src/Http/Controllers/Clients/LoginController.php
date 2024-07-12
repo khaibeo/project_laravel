@@ -106,6 +106,3 @@ class LoginController extends Controller
 
     }
 }
-
-//Notification: ResetPassword
-//Model Method: sendPasswordResetNotification
