@@ -37,7 +37,7 @@ class LoginController extends Controller
         $status = Auth::guard('students')->attempt($dataLogin, $request->remember == 1 ? true : false);
 
         if ($status) {
-            return redirect('/');
+            return redirect()->route('home');
         }
         return back()->with('msg', __('Auth::messages.login.failure'));
     }

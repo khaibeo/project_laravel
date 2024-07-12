@@ -30,11 +30,11 @@ use Modules\Video\src\Repositories\VideoRepositoryInterface;
 class ModuleServiceProvider extends ServiceProvider
 {
     private $middlewares = [
-        'demo' => DemoMiddleware::class,
+        // 'demo' => DemoMiddleware::class,
     ];
 
     private $commands = [
-        Test::class,
+        // Test::class,
     ];
 
     public function boot()
@@ -45,6 +45,11 @@ class ModuleServiceProvider extends ServiceProvider
             foreach ($dir as $directory) {
                 $this->registerModule($directory);
             }
+        }
+
+        $request = request();
+        if($request->is('admin') || $request->is('admin/*')){
+            $this->app['router']->pushMiddlewareToGroup('web', 'auth');
         }
     }
 

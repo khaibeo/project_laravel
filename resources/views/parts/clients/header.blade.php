@@ -27,7 +27,9 @@
                             <li>Chào bạn, {{auth('students')->user()->name}}</li>
                             <li><a href="#">Tài khoản</a></li>
                             <li><a href="#" onclick="document['form-logout'].submit(); return false;">Đăng xuất</a></li>
-
+                            <form name="form-logout" action="{{ route('clients.logout')}}" method="POST">
+                                @csrf
+                            </form>
                         </ul>
                         @else
                         <a href="{{route('clients.register')}}" class="btn btn-primary text-white">

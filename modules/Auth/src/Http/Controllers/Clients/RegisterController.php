@@ -41,7 +41,6 @@ class RegisterController extends Controller
         Auth::guard('students')->login($user);
         return redirect()->route('verification.notice');
     }
-
 }
 
 //VerifyEmail

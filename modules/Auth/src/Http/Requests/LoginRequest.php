@@ -39,7 +39,7 @@ class LoginRequest extends FormRequest
 
     public function attributes()
     {
-        return __('auth::validation.attributes');
+        return __('Auth::validation.attributes');
     }
 
 }
