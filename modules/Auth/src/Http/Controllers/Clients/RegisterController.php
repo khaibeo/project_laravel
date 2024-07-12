@@ -42,5 +42,3 @@ class RegisterController extends Controller
         return redirect()->route('verification.notice');
     }
 }
-
-//VerifyEmail

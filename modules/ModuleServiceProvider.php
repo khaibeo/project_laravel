@@ -17,6 +17,7 @@ use Modules\Document\src\Repositories\DocumentRepository;
 use Modules\Document\src\Repositories\DocumentRepositoryInterface;
 use Modules\Lessons\src\Repositories\LessonsRepository;
 use Modules\Lessons\src\Repositories\LessonsRepositoryInterface;
+use Modules\Students\src\Http\Middlewares\BlockStudentMiddleware;
 use Modules\Students\src\Repositories\StudentsRepository;
 use Modules\Students\src\Repositories\StudentsRepositoryInterface;
 use Modules\Teacher\src\Repositories\TeacherRepository;
@@ -30,7 +31,7 @@ use Modules\Video\src\Repositories\VideoRepositoryInterface;
 class ModuleServiceProvider extends ServiceProvider
 {
     private $middlewares = [
-        // 'demo' => DemoMiddleware::class,
+        'blockStudent' => BlockStudentMiddleware::class,
     ];
 
     private $commands = [
