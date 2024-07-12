@@ -5,6 +5,7 @@ namespace Modules\Students\src\Repositories;
 use App\Repositories\BaseRepository;
 use Modules\Students\src\Models\Student;
 use Modules\Students\src\Repositories\StudentsRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
 
 class StudentsRepository extends BaseRepository implements StudentsRepositoryInterface
 {

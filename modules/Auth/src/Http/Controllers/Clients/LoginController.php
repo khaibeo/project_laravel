@@ -3,60 +3,109 @@
 namespace Modules\Auth\src\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Modules\Auth\src\Http\Requests\LoginRequest;
+use Modules\Students\src\Models\Student;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-     */
 
-    // use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::ADMIN;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        // $this->middleware('guest')->except('logout');
+        $this->middleware('guest:students', ['except' => 'logout']);
     }
 
     public function showLoginForm()
     {
         $pageTitle = 'Đăng nhập';
-        return view('auth::clients.login', compact('pageTitle'));
+        return view('Auth::clients.login', compact('pageTitle'));
 
     }
 
-    // protected function sendFailedLoginResponse(Request $request)
-    // {
-    //     throw ValidationException::withMessages([
-    //         $this->username() => [__('auth::messages.login.failure')],
-    //     ]);
-    // }
+    public function login(LoginRequest $request)
+    {
+        $dataLogin = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
-    // protected function loggedOut(Request $request)
-    // {
-    //     return redirect($this->redirectTo);
-    // }
+        $status = Auth::guard('students')->attempt($dataLogin, $request->remember == 1 ? true : false);
 
+        if ($status) {
+            return redirect('/');
+        }
+        return back()->with('msg', __('Auth::messages.login.failure'));
+    }
+
+    public function logout()
+    {
+        Auth::guard('students')->logout();
+        return redirect()->route('home');
+    }
+
+    public function showFormForgot()
+    {
+        $pageTitle = 'Đặt lại mật khẩu';
+        return view('Auth::clients.forgot', compact('pageTitle'));
+    }
+
+    public function handleSendForgotLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::broker('students')->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with(['msg' => __('Auth::messages.password.sent.success')]);
+        }
+        return back()->with(['msg' => __('Auth::messages.password.sent.failure')]);
+
+    }
+
+    public function showFormReset($token)
+    {
+        $pageTitle = 'Đặt lại mật khẩu';
+
+        return view('Auth::clients.reset', compact('pageTitle', 'token'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        $status = Password::broker('students')->reset(
+            $request->only('email', 'password', 'confirm_password', 'token'),
+            function (Student $student, string $password) {
+                $student->forceFill([
+                    'password' => Hash::make($password),
+                ])->setRememberToken(Str::random(60));
+
+                $student->save();
+
+                event(new PasswordReset($student));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('clients.login')->with('msg', __('Auth::messages.passwords.reset.success'));
+        }
+
+        return back()->with('msg', __('Auth::messages.' . $status));
+
+    }
 }
+
+//Notification: ResetPassword
+//Model Method: sendPasswordResetNotification

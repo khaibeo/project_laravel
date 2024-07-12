@@ -2,6 +2,7 @@
 
 namespace Modules\Lessons\src\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Video\src\Models\Video;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Document\src\Models\Document;

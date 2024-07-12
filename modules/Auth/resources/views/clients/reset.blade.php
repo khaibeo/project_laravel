@@ -10,23 +10,12 @@
         </a>
     </div>
     <div class="sign-up">
-        <h3>Đăng kí</h3>
+        <h3>Đặt lại mật khẩu</h3>
         @if (session('msg'))
         <div class="alert alert-danger">{{session('msg')}}</div>
         @endif
-        <form action="" method="post">
-            <input type="text" name="name" placeholder="Tên" />
-            @error('name')
-            <span class="text-start text-danger mb-3">{{$message}}</span>
-            @enderror
-            <input type="text" name="email" placeholder="Email" />
-            @error('email')
-            <span class="text-start text-danger mb-3">{{$message}}</span>
-            @enderror
-            <input type="text" name="phone" placeholder="Số điện thoại" />
-            @error('phone')
-            <span class="text-start text-danger mb-3">{{$message}}</span>
-            @enderror
+        <form action="{{route('clients.password.update')}}" method="post">
+
             <input type="password" name="password" placeholder="Mật khẩu" />
             @error('password')
             <span class="text-start text-danger mb-3">{{$message}}</span>
@@ -35,15 +24,16 @@
             @error('confirm_password')
             <span class="text-start text-danger mb-3">{{$message}}</span>
             @enderror
+            <input type="hidden" name="token" value="{{$token}}" />
+            <input type="hidden" name="email" value="{{request()->email}}" />
             <button type="submit">
                 <i class="fa-solid fa-user"></i>
-                Đăng kí
+                Xác nhận
             </button>
             @csrf
         </form>
-        <p class="sign-in">
-            Bạn đã có tài khoản?
-            <a href="{{route('clients.login')}}">Đăng nhập ngay</a>
+        <p class="sign-up">
+            <a href="{{route('clients.login')}}">Quay lại đăng nhập</a>
         </p>
     </div>
 </div>
