@@ -25,7 +25,7 @@
                         @if (auth('students')->check())
                         <ul class="d-flex gap-2">
                             <li>Chào bạn, {{auth('students')->user()->name}}</li>
-                            <li><a href="#">Tài khoản</a></li>
+                            <li><a href="{{route('students.account.index')}}">Tài khoản</a></li>
                             <li><a href="#" onclick="document['form-logout'].submit(); return false;">Đăng xuất</a></li>
                             <form name="form-logout" action="{{ route('clients.logout')}}" method="POST">
                                 @csrf

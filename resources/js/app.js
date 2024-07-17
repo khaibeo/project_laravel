@@ -7,5 +7,7 @@ import "./slider-home";
 import "./home";
 import "./tab.js";
 import "./video.js";
+import "./account.js";
+
 
 

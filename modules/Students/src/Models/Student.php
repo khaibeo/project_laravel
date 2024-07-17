@@ -33,5 +33,4 @@ class Student extends Authenticatable implements MustVerifyEmail, CanResetPasswo
     {
         $this->notify(new ResetPasswordQueued($token));
     }
-
 }

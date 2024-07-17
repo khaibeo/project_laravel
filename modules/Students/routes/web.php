@@ -18,3 +18,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
        Route::delete('delete/{student}', 'StudentController@delete')->name('delete');
    });
 });
+
+Route::group(['as' => 'students.'], function () {
+    Route::group(['prefix' => 'tai-khoan', 'as' => 'account.', 'middleware' => ['auth:students', 'verified', 'blockStudent']], function () {
+        Route::get('/', 'Clients\AccountController@index')->name('index');
+        Route::get('/thong-tin', 'Clients\AccountController@profile')->name('profile');
+        Route::post('/thong-tin', 'Clients\AccountController@updateProfile')->name('update-profile');
+        Route::get('/khoa-hoc', 'Clients\AccountController@myCourses')->name('courses');
+        Route::get('/don-hang', 'Clients\AccountController@myOrders')->name('orders');
+        Route::get('/doi-mat-khau', 'Clients\AccountController@changePassword')->name('password');
+        Route::post('/doi-mat-khau', 'Clients\AccountController@updatePassword');
+    });
+});
