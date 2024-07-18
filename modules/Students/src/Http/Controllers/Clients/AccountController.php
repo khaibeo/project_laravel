@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Modules\Students\src\Http\Requests\Clients\PasswordRequest;
 use Modules\Students\src\Http\Requests\Clients\StudentRequest;
+use Modules\Students\src\Models\Student;
 use Modules\Students\src\Repositories\StudentsRepositoryInterface;
 
 class AccountController extends Controller
@@ -52,7 +53,13 @@ class AccountController extends Controller
         $pageTitle = 'Khóa học của tôi';
         $pageName = 'Khóa học của tôi';
 
-        return view('Students::clients.my-courses', compact('pageTitle', 'pageName'));
+        $studentId = Auth::guard('students')->user()->id;
+
+        $a = Student::find($studentId)->courses;
+
+        $courses = $this->studentRepository->getCourses($studentId, 5);
+
+        return view('Students::clients.my-courses', compact('pageTitle', 'pageName','courses'));
     }
     public function myOrders()
     {

@@ -38,4 +38,8 @@ class StudentsRepository extends BaseRepository implements StudentsRepositoryInt
         }
         return false;
     }
+
+    public function getCourses($studentId,$limit){
+        return $this->find($studentId)->courses()->paginate($limit);
+    }
 }
